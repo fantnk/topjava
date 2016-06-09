@@ -1,0 +1,23 @@
+table.list {
+    border-collapse: collapse;
+    width: 700px;
+}
+
+table.list tr:first-child {
+    font-weight: bold;
+    background-color: #C6C9C4;
+}
+
+table.list th, table.list td {
+    text-align: left;
+    padding: 8px;
+}
+
+table.list tr:nth-child(even) {
+    background-color: #f2f2f2
+}
+
+table.list th {
+    background-color: #4CAF50;
+    color: white;
+}
