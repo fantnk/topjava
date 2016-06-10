@@ -15,9 +15,9 @@
     <div align="center" style="padding-top: 10px">
         <table class="list">
             <tr>
-                <td width="35%">Время</td>
-                <td width="35%">Описание</td>
-                <td width="18%">Калории</td>
+                <td>Время</td>
+                <td>Описание</td>
+                <td>Калории</td>
                 <td>Правка</td>
                 <td>Удалить</td>
             </tr>
@@ -36,15 +36,16 @@
                 <td>${date}</td>
                 <td>${meal.description}</td>
                 <td>${meal.calories}</td>
-                <td><a href="<c:url value='/edit?id=${user.id}' />"><img
+                <td><a href="<c:url value='meals?action=update&id=${meal.id}' />"><img
                         src="${pageContext.request.contextPath}/resources/images/user_edit.png"
                         width="20px" height="20px"/></a></td>
-                <td><a href="<c:url value='/delete?id=${user.id}' />"><img
+                <td><a href="<c:url value='meals?action=delete&id=${meal.id}' />"><img
                         src="${pageContext.request.contextPath}/resources/images/user_remove.png"
                         width="20px" height="20px"/></a></td>
                 </tr>
             </c:forEach>
         </table>
+        <a href="<c:url value='meals?action=create' />">Create</a>
     </div>
 </div>
 </body>
