@@ -6,9 +6,8 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.javawebinar.topjava.LoggedUser;
 import ru.javawebinar.topjava.model.UserMeal;
-import ru.javawebinar.topjava.service.UserMealService;
-import ru.javawebinar.topjava.service.UserMealServiceImpl;
 import ru.javawebinar.topjava.util.UserMealsUtil;
+import ru.javawebinar.topjava.web.meal.UserMealRestController;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -25,13 +24,13 @@ import java.util.Objects;
  */
 public class MealServlet extends HttpServlet {
     private static final Logger LOG = LoggerFactory.getLogger(MealServlet.class);
-    private UserMealService service;
+    private UserMealRestController controller;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         ConfigurableApplicationContext appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml");
-        service = appCtx.getBean(UserMealServiceImpl.class);
+        controller = appCtx.getBean(UserMealRestController.class);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -42,7 +41,7 @@ public class MealServlet extends HttpServlet {
                 request.getParameter("description"),
                 Integer.valueOf(request.getParameter("calories")), LoggedUser.id());
         LOG.info(userMeal.isNew() ? "Create {}" : "Update {}", userMeal);
-        service.save(userMeal, LoggedUser.id());
+        controller.save(userMeal);
         response.sendRedirect("meals");
     }
 
@@ -52,17 +51,17 @@ public class MealServlet extends HttpServlet {
         if (action == null) {
             LOG.info("getAll");
             request.setAttribute("mealList",
-                    UserMealsUtil.getWithExceeded(service.getAll(LoggedUser.id()), LoggedUser.getCaloriesPerDay()));
+                    UserMealsUtil.getWithExceeded(controller.getAll(), UserMealsUtil.DEFAULT_CALORIES_PER_DAY));
             request.getRequestDispatcher("/mealList.jsp").forward(request, response);
         } else if (action.equals("delete")) {
             int id = getId(request);
             LOG.info("Delete {}", id);
-            service.delete(id, LoggedUser.id());
+            controller.delete(id);
             response.sendRedirect("meals");
         } else if (action.equals("create") || action.equals("update")) {
             final UserMeal meal = action.equals("create") ?
                     new UserMeal(LocalDateTime.now().withNano(0).withSecond(0), "", 1000, LoggedUser.id()) :
-                    service.get(getId(request), LoggedUser.id());
+                    controller.get(getId(request));
             request.setAttribute("meal", meal);
             request.getRequestDispatcher("mealEdit.jsp").forward(request, response);
         }

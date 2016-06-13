@@ -10,13 +10,15 @@ import java.util.Collection;
  * 15.06.2015.
  */
 public interface UserMealService {
-    UserMeal save(UserMeal userMeal, int userId) throws NotFoundException;
+    UserMeal save(UserMeal userMeal) throws NotFoundException;
 
-    void delete(int id, int userId) throws NotFoundException;
+    void delete(int id) throws NotFoundException;
 
-    UserMeal get(int id, int userId) throws NotFoundException;
+    UserMeal get(int id) throws NotFoundException;
+
+    Collection<UserMeal> getAll();
 
     Collection<UserMeal> getAll(int userId);
 
-    UserMeal update(UserMeal userMeal, int userId) throws NotFoundException;
+    UserMeal update(UserMeal userMeal) throws NotFoundException;
 }

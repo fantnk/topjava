@@ -22,27 +22,23 @@ public class UserMealServiceImpl implements UserMealService {
     private InMemoryUserMealRepositoryImpl repository;
 
     @Override
-    public UserMeal save(UserMeal userMeal, int userId) throws NotFoundException {
-        if (userMeal.getUserId() != userId)
-            throw new NotFoundException("Не авторизован. ");
-
+    public UserMeal save(UserMeal userMeal) throws NotFoundException {
         return repository.save(userMeal);
     }
 
     @Override
-    public void delete(int id, int userId) throws NotFoundException {
-        if (repository.get(id).getUserId() != userId)
-            throw new NotFoundException("Не авторизован. ");
-
+    public void delete(int id) throws NotFoundException {
         repository.delete(id);
     }
 
     @Override
-    public UserMeal get(int id, int userId) throws NotFoundException {
-        if (repository.get(id).getUserId() != userId)
-            throw new NotFoundException("Не авторизован. ");
-
+    public UserMeal get(int id) throws NotFoundException {
         return repository.get(id);
+    }
+
+    @Override
+    public Collection<UserMeal> getAll() {
+        return repository.getAll();
     }
 
     @Override
@@ -66,7 +62,7 @@ public class UserMealServiceImpl implements UserMealService {
     }*/
 
     @Override
-    public UserMeal update(UserMeal userMeal, int userId) throws NotFoundException {
-        return save(userMeal, userId);
+    public UserMeal update(UserMeal userMeal) throws NotFoundException {
+        return save(userMeal);
     }
 }
