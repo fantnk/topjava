@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -48,10 +47,7 @@ public class InMemoryUserRepositoryImpl implements UserRepository {
     public List<User> getAll() {
         LOG.info("getAll");
 
-        List<User> users = new LinkedList<>(repository.values());
-        Collections.sort(users, (o1, o2) -> o1.getName().compareTo(o2.getName()));
-
-        return users;
+        return new LinkedList<>(repository.values());
     }
 
     @Override

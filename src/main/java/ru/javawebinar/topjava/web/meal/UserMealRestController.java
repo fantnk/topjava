@@ -8,7 +8,6 @@ import ru.javawebinar.topjava.service.UserMealService;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.util.Collection;
-import java.util.List;
 
 /**
  * GKislin
@@ -43,6 +42,10 @@ public class UserMealRestController {
             throw new NotFoundException("Не авторизован. ");
 
         service.delete(id);
+    }
+
+    public Collection<UserMeal> getAllOwn() {
+        return service.getAll(LoggedUser.id());
     }
 
     public Collection<UserMeal> getAll() {

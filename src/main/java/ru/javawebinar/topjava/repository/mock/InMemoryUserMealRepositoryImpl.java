@@ -6,6 +6,7 @@ import ru.javawebinar.topjava.repository.UserMealRepository;
 import ru.javawebinar.topjava.util.UserMealsUtil;
 
 import javax.annotation.PostConstruct;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -29,7 +30,9 @@ public class InMemoryUserMealRepositoryImpl implements UserMealRepository {
 
     public static void main(String[] args) {
         InMemoryUserMealRepositoryImpl usmr = new InMemoryUserMealRepositoryImpl();
-        usmr.init();
+        //usmr.init();
+        UserMeal um = new UserMeal(1, LocalDateTime.now(), "des", 333, 1);
+        usmr.save(um);
         System.out.println(usmr.getAll());
     }
     @Override
@@ -42,8 +45,8 @@ public class InMemoryUserMealRepositoryImpl implements UserMealRepository {
     }
 
     @Override
-    public void delete(int id) {
-        repository.remove(id);
+    public boolean delete(int id) {
+        return repository.remove(id) != null;
     }
 
     @Override
@@ -52,11 +55,9 @@ public class InMemoryUserMealRepositoryImpl implements UserMealRepository {
     }
 
     @Override
-    public Collection<UserMeal> getAll() {
-        List<UserMeal> mealList = new LinkedList<>(repository.values());
-        Collections.sort(mealList, (o1, o2) -> o2.getDateTime().compareTo(o1.getDateTime()));
+    public List<UserMeal> getAll() {
 
-        return mealList;
+        return new ArrayList<>(repository.values());
     }
 }
 

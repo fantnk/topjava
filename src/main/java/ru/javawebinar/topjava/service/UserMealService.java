@@ -3,7 +3,9 @@ package ru.javawebinar.topjava.service;
 import ru.javawebinar.topjava.model.UserMeal;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
-import java.util.Collection;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
 
 /**
  * GKislin
@@ -16,9 +18,13 @@ public interface UserMealService {
 
     UserMeal get(int id) throws NotFoundException;
 
-    Collection<UserMeal> getAll();
+    List<UserMeal> getAll();
 
-    Collection<UserMeal> getAll(int userId);
+    List<UserMeal> getAll(int userId);
+
+    List<UserMeal> getFilteredByTime(LocalTime startTime, LocalTime endTime);
+
+    List<UserMeal> getFilteredByDate(LocalDate startDate, LocalDate endDate);
 
     UserMeal update(UserMeal userMeal) throws NotFoundException;
 }

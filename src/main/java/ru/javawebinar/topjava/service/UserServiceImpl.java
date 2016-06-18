@@ -7,6 +7,7 @@ import ru.javawebinar.topjava.repository.UserRepository;
 import ru.javawebinar.topjava.util.exception.ExceptionUtil;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -36,7 +37,11 @@ public class UserServiceImpl implements UserService {
     }
 
     public List<User> getAll() {
-        return repository.getAll();
+        List<User> userList = repository.getAll();
+
+        Collections.sort(userList, (o1, o2) -> o1.getName().compareTo(o2.getName()));
+
+        return userList;
     }
 
     public void update(User user) {

@@ -4,10 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.javawebinar.topjava.model.UserMeal;
 import ru.javawebinar.topjava.repository.mock.InMemoryUserMealRepositoryImpl;
+import ru.javawebinar.topjava.util.TimeUtil;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,12 +40,16 @@ public class UserMealServiceImpl implements UserMealService {
     }
 
     @Override
-    public Collection<UserMeal> getAll() {
-        return repository.getAll();
+    public List<UserMeal> getAll() {
+        List<UserMeal> mealList = repository.getAll();
+
+        Collections.sort(mealList, (o1, o2) -> o2.getDateTime().compareTo(o1.getDateTime()));
+
+        return mealList;
     }
 
     @Override
-    public Collection<UserMeal> getAll(int userId) {
+    public List<UserMeal> getAll(int userId) {
         if (repository == null)
             return new ArrayList<>();
 
@@ -53,6 +60,20 @@ public class UserMealServiceImpl implements UserMealService {
                 .collect(Collectors.toList());
 
         return mealList;
+    }
+
+    @Override
+    public List<UserMeal> getFilteredByTime(LocalTime startTime, LocalTime endTime) {
+        return repository.getAll().stream()
+                .filter(um -> TimeUtil.isBetween(um.getDateTime().toLocalTime(), startTime, endTime))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<UserMeal> getFilteredByDate(LocalDate startDate, LocalDate endDate) {
+        return repository.getAll().stream()
+                .filter(um -> TimeUtil.isBetween(um.getDateTime().toLocalDate(), startDate, endDate))
+                .collect(Collectors.toList());
     }
 
     /*public static void main(String[] args) {
