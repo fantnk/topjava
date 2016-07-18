@@ -54,9 +54,13 @@
             <constructor-arg ref="dataSource"/>
         </bean>
 
+        <!--<bean id="entityManagerFactory" class="javax.persistence.EntityManager"/>-->
+
         <bean id="namedJdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
             <constructor-arg ref="dataSource"/>
         </bean>
+
+        <!--<bean class="ru.javawebinar.topjava.repository.JpaUtil"/>-->
     </beans>
 
     <beans profile="datajpa,jpa">
@@ -104,4 +108,9 @@
         <context:component-scan base-package="ru.javawebinar.**.repository.datajpa"/>
         <jpa:repositories base-package="ru.javawebinar.**.repository.datajpa"/>
     </beans>
+
+    <beans>
+        <!--<bean id="adminRestController" class="ru.javawebinar.topjava.web.user.AdminRestController"/>-->
+    </beans>
+
 </beans>
