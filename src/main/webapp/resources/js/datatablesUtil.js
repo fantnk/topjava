@@ -1,14 +1,9 @@
+var form;
+
 function makeEditable() {
-    $('#add').click(function () {
-        $('#id').val(0);
-        $('#editRow').modal();
-    });
+    form = $('#detailsForm');
 
-    $('.delete').click(function () {
-        deleteRow($(this).attr("id"));
-    });
-
-    $('#detailsForm').submit(function () {
+    form.submit(function () {
         save();
         return false;
     });
@@ -16,6 +11,12 @@ function makeEditable() {
     $(document).ajaxError(function (event, jqXHR, options, jsExc) {
         failNoty(event, jqXHR, options, jsExc);
     });
+}
+
+function add() {
+    form.find(":input").val("");
+    $('#id').val(null);
+    $('#editRow').modal();
 }
 
 function deleteRow(id) {
@@ -29,19 +30,28 @@ function deleteRow(id) {
     });
 }
 
-function updateTable() {
-    $.get(ajaxUrl, function (data) {
-        datatableApi.fnClearTable();
-        $.each(data, function (key, item) {
-            datatableApi.fnAddData(item);
-        });
-        datatableApi.fnDraw();
+function enable(chkbox, id) {
+    var enabled = chkbox.is(":checked");
+    chkbox.closest('tr').css("text-decoration", enabled ? "none" : "line-through");
+    $.ajax({
+        url: ajaxUrl + id,
+        type: 'POST',
+        data: 'enabled=' + enabled,
+        success: function () {
+            successNoty(enabled ? 'Enabled' : 'Disabled');
+        }
     });
 }
 
+function updateTableByData(data) {
+    datatableApi.fnClearTable();
+    $.each(data, function (key, item) {
+        datatableApi.fnAddData(item);
+    });
+    datatableApi.fnDraw();
+}
+
 function save() {
-    var form = $('#detailsForm');
-    debugger;
     $.ajax({
         type: "POST",
         url: ajaxUrl,

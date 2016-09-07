@@ -6,7 +6,9 @@ import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.topjava.model.UserMeal;
 import ru.javawebinar.topjava.to.UserMealWithExceed;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @RestController
@@ -17,19 +19,26 @@ public class UserMealAjaxController extends AbstractUserMealController {
         return super.getAll();
     }
 
+    @RequestMapping(value = "/filter", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<UserMealWithExceed> getBetween(
+            @RequestParam(value = "startDate", required = false) LocalDate startDate, @RequestParam(value = "startTime", required = false) LocalTime startTime,
+            @RequestParam(value = "endDate", required = false) LocalDate endDate, @RequestParam(value = "endTime", required = false) LocalTime endTime) {
+        return super.getBetween(startDate, startTime, endDate, endTime);
+    }
+
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public void delete(@PathVariable("id") int id) {
         super.delete(id);
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public void createOrUpdate(@RequestParam("id") int id,
+    public void createOrUpdate(@RequestParam("id") Integer id,
                                @RequestParam("dateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateTime,
                                @RequestParam("description") String description,
                                @RequestParam("calories") int calories) {
 
         UserMeal userMeal = new UserMeal(id, dateTime, description, calories);
-        if (id == 0) {
+        if (userMeal.isNew()) {
             super.create(userMeal);
         } else {
             super.update(userMeal, id);

@@ -12,7 +12,7 @@
     <div class="container">
         <div class="shadow">
             <h3><fmt:message key="meals.title"/></h3>
-            <form class="form-horizontal" method="post" action="meals/filter">
+            <form class="form-horizontal" method="post" action="meals/filter" id="filterForm">
                 <div class="form-group">
                     <label class="control-label col-sm-2">From Date:</label>
                     <div class="col-sm-10">
@@ -38,7 +38,7 @@
                 </div>
             </form>
             <div class="view-box">
-                <a class="btn btn-sm btn-info" id="add"><fmt:message key="meals.add"/></a>
+                <a class="btn btn-sm btn-info" onclick="add()"><fmt:message key="meals.add"/></a>
 
                 <table class="table table-striped display" id="datatable">
                     <thead>
@@ -56,8 +56,8 @@
                             <td>${fn:formatDateTime(meal.dateTime)}</td>
                             <td>${meal.description}</td>
                             <td>${meal.calories}</td>
-                            <td><a class="btn btn-xs btn-primary edit" id="${meal.id}">Update</a></td>
-                            <td><a class="btn btn-xs btn-danger delete" id="${meal.id}">Delete</a></td>
+                            <td><a class="btn btn-xs btn-primary edit">Update</a></td>
+                            <td><a class="btn btn-xs btn-danger delete" onclick="deleteRow(${meal.id})">Delete</a></td>
                         </tr>
                     </c:forEach>
                 </table>
@@ -126,8 +126,18 @@
     var ajaxUrl = 'ajax/profile/meals/';
     var datatableApi;
 
-    // $(document).ready(function () {
-    $(function () {
+    function updateTable() {
+        $.ajax({
+            type: "POST",
+            url: ajaxUrl + 'filter',
+            data: $('#filter').serialize(),
+            success: updateTableByData
+        });
+        return false;
+    }
+
+    $(document).ready(function () {
+        //$(function () {
         datatableApi = $('#datatable').dataTable({
             "bPaginate": false,
             "bInfo": false,
@@ -156,6 +166,10 @@
                     "asc"
                 ]
             ]
+        });
+        $('#filter').submit(function () {
+            updateTable();
+            return false;
         });
         makeEditable();
     });
